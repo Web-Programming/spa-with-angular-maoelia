@@ -1,8 +1,11 @@
 <nav class="navbar">
-  <a routerLink="/cv" routerLinkActive="active">CV Saya</a>
+  <a routerLink="/cv" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+    >CV Saya</a
+  >
   <a routerLink="/contact" routerLinkActive="active">Kontak</a>
 </nav>
 
-<div class="content">
+<main class="content">
+  <!-- wajib ada jika tidak aplikasi akan kosong -->
   <router-outlet></router-outlet>
-</div>
+</main>
