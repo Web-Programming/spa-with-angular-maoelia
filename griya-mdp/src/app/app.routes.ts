@@ -6,23 +6,23 @@ import { Register } from './register/register';
 import { Contact } from './contact/contact';
 
 export const routes: Routes = [
-  //mengatur halaman utama aplikasi
+  //mengatuh halaman utama aplikasi
   {
     path: '',
     component: HomeComponent,
     title: 'Home Page',
   },
   {
-    path: '/profil',
+    path: 'profile',
     component: Profil,
-    title: 'Profile Page',
+    //title : 'Profile Page'
   },
   {
-    path: 'Login',
+    path: 'login',
     component: Login,
   },
   {
-    path: 'Register',
+    path: 'register',
     component: Register,
   },
   {
