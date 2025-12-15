@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const User = mongoose.model("User");
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const jwt = require('jsonwebtoken'); // import jwt
 
 // Register User Baru
 const register = async (req, res) => {
@@ -10,7 +11,7 @@ const register = async (req, res) => {
     if (!name || !email || !password || !confirmPassword) {
       return res.status(400).json({
         success: false,
-        message: "Semua field harus diisi"
+        message: 'Semua field harus diisi',
       });
     }
 
@@ -18,7 +19,7 @@ const register = async (req, res) => {
     if (name.trim().length < 2) {
       return res.status(400).json({
         success: false,
-        message: "Nama minimal 2 karakter"
+        message: 'Nama minimal 2 karakter',
       });
     }
 
@@ -27,7 +28,7 @@ const register = async (req, res) => {
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         success: false,
-        message: "Format email tidak valid"
+        message: 'Format email tidak valid',
       });
     }
 
@@ -35,7 +36,7 @@ const register = async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
-        message: "Password minimal 6 karakter"
+        message: 'Password minimal 6 karakter',
       });
     }
 
@@ -43,16 +44,18 @@ const register = async (req, res) => {
     if (password !== confirmPassword) {
       return res.status(400).json({
         success: false,
-        message: "Password dan Konfirmasi Password tidak cocok"
+        message: 'Password dan Konfirmasi Password tidak cocok',
       });
     }
+
+    //
 
     // Cek apakah email sudah terdaftar
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: "Email sudah terdaftar"
+        message: 'Email sudah terdaftar',
       });
     }
 
@@ -60,33 +63,39 @@ const register = async (req, res) => {
     const newUser = new User({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      password: password
+      password: password,
     });
 
     // Simpan ke database
     await newUser.save();
 
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email },
+      'kunci_rahasia_griya_mdp', // gunakkan env variabel di production
+      { expiresIn: '1h' } // Token kadaluarsa dalam 1 jam
+    );
+
     // Response sukses (jangan kirim password)
     res.status(201).json({
       success: true,
-      message: "Registrasi berhasil! Silakan login",
+      message: 'Registrasi berhasil! Silakan login',
       data: {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        createdAt: newUser.createdAt
-      }
+        createdAt: newUser.createdAt,
+        token: token,
+      },
     });
-
   } catch (error) {
-    console.error("Register Error:", error);
-    
+    console.error('Register Error:', error);
+
     // Handle mongoose validation errors
-    if (error.name === "ValidationError") {
-      const messages = Object.values(error.errors).map(err => err.message);
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({
         success: false,
-        message: messages.join(", ")
+        message: messages.join(', '),
       });
     }
 
@@ -94,14 +103,14 @@ const register = async (req, res) => {
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: "Email sudah terdaftar"
+        message: 'Email sudah terdaftar',
       });
     }
 
     res.status(500).json({
       success: false,
-      message: "Terjadi kesalahan pada server",
-      error: error.message
+      message: 'Terjadi kesalahan pada server',
+      error: error.message,
     });
   }
 };
@@ -115,7 +124,7 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email dan password harus diisi"
+        message: 'Email dan password harus diisi',
       });
     }
 
@@ -124,7 +133,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Email atau password salah"
+        message: 'Email atau password salah',
       });
     }
 
@@ -133,27 +142,33 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: "Email atau password salah"
+        message: 'Email atau password salah',
       });
     }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      'kunci_rahasia_griya_mdp', // Gunakkan env variable di production
+      { expiresIn: '1h' } // gunakkan kadaluarsa dalam 1 jam
+    );
 
     // Response sukses (jangan kirim password)
     res.status(200).json({
       success: true,
-      message: "Login berhasil",
+      message: 'Login berhasil',
       data: {
         id: user._id,
         name: user.name,
-        email: user.email
-      }
+        email: user.email,
+        token: token, // 3. Kirim token ke frontend
+      },
     });
-
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error('Login Error:', error);
     res.status(500).json({
       success: false,
-      message: "Terjadi kesalahan pada server",
-      error: error.message
+      message: 'Terjadi kesalahan pada server',
+      error: error.message,
     });
   }
 };
@@ -163,25 +178,24 @@ const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
 
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan"
+        message: 'User tidak ditemukan',
       });
     }
 
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
-
   } catch (error) {
-    console.error("Get Profile Error:", error);
+    console.error('Get Profile Error:', error);
     res.status(500).json({
       success: false,
-      message: "Terjadi kesalahan pada server",
-      error: error.message
+      message: 'Terjadi kesalahan pada server',
+      error: error.message,
     });
   }
 };
@@ -189,5 +203,5 @@ const getProfile = async (req, res) => {
 module.exports = {
   register,
   login,
-  getProfile
+  getProfile,
 };

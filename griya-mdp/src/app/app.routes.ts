@@ -1,39 +1,39 @@
 import { Routes } from '@angular/router';
 import { Home as HomeComponent } from './home/home';
-import { Profil } from './profil/profil';
-import { Login } from './login/login';
-import { Register } from './register/register';
-import { Contact } from './contact/contact';
+import { Profile as ProfileComponent } from './profile/profile';
+import { Login as LoginComponent } from './login/login';
+import { Contact as ContactComponent } from './contact/contact';
+import { Register as RegisterComponent } from './register/register';
 import { Detail } from './detail/detail';
+import { authGuard } from './guards/auth.guards';
 
 export const routes: Routes = [
-  //mengatuh halaman utama aplikasi
   {
     path: '',
     component: HomeComponent,
-    title: 'Home Page',
+    title: 'Home',
   },
   {
     path: 'profile',
-    component: Profil,
-    //title : 'Profile Page'
+    component: ProfileComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'login',
-    component: Login,
+    component: LoginComponent,
   },
   {
     path: 'register',
-    component: Register,
+    component: RegisterComponent,
   },
   {
     path: 'contact',
-    component: Contact,
+    component: ContactComponent,
   },
   {
     path: 'property/:id',
     component: Detail,
-    title: 'Detail Property - Griya MDP',
+    title: 'Detail Property',
   },
   {
     path: '**',

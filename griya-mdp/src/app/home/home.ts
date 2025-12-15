@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // ← Untuk search
-import { LokasiPerumahan } from '../lokasi-perumahan/lokasi-perumahan';
+import { LokasiperumahanComponent } from '../lokasi-perumahan/lokasi-perumahan';
 import { Housing } from '../lokasi-perumahan/housing.model';
 import { HousingService } from '../services/housing'; // ← Import service
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { HOUSING_DATA } from '../data/housing-data';
 
 @Component({
   selector: 'app-home',
-  imports: [LokasiPerumahan, CommonModule, RouterLink, FormsModule],
+  imports: [LokasiperumahanComponent, CommonModule, RouterLink, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

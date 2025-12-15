@@ -11,10 +11,10 @@
           </p>
         </div>
 
-        <!-- Register Card -->
+        <!-- Register Form Card -->
         <div class="card shadow-lg border-0">
           <div class="card-body p-4 p-md-5">
-            <!-- Success Alert -->
+            <!-- Success alert -->
             <div
               class="alert alert-success alert-dismissible fade show"
               role="alert"
@@ -28,7 +28,6 @@
                 aria-label="Close"
               ></button>
             </div>
-
             <!-- Error Alert -->
             <div
               class="alert alert-danger alert-dismissible fade show"
@@ -43,9 +42,9 @@
                 aria-label="Close"
               ></button>
             </div>
-
+            <!-- Form akan berada di sini -->
             <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
-              <!-- Form fields -->
+              <!-- Form Fields Name -->
               <div class="mb-4">
                 <label for="name" class="form-label fw-semibold">
                   <i class="bi bi-person-fill me-2"></i>Nama Lengkap
@@ -78,7 +77,7 @@
                 </div>
               </div>
 
-              <!-- Email -->
+              <!-- Form Field Email-->
               <div class="mb-4">
                 <label for="email" class="form-label fw-semibold">
                   <i class="bi bi-envelope-fill me-2"></i>Email
@@ -113,14 +112,14 @@
                 </div>
               </div>
 
-              <!-- Password Field -->
+              <!-- Form Field Password-->
               <div class="mb-4">
                 <label for="password" class="form-label fw-semibold">
                   <i class="bi bi-lock-fill me-2"></i>Password
                 </label>
                 <div class="input-group">
                   <input
-                    [type]="showPassword ? 'text' : 'password'"
+                    type="password"
                     class="form-control form-control-lg"
                     id="password"
                     formControlName="password"
@@ -139,7 +138,7 @@
                   </button>
                 </div>
                 <div
-                  class="invalid-feedback d-block"
+                  class="invalid-feedback"
                   *ngIf="
                     registerForm.get('password')?.invalid && registerForm.get('password')?.touched
                   "
@@ -161,9 +160,9 @@
                 </div>
               </div>
 
-              <!-- Confirm Password Field -->
+              <!-- Confrim password Field -->
               <div class="mb-4">
-                <label for="confirmPassword" class="form-label fw-semibold">
+                <label for="confrimPassword" class="form-label fw-semibold">
                   <i class="bi bi-lock-fill me-2"></i>Konfirmasi Password
                 </label>
                 <div class="input-group">
@@ -172,9 +171,10 @@
                     class="form-control form-control-lg"
                     id="confirmPassword"
                     formControlName="confirmPassword"
-                    [class.is-invalid]="(registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched)"
+                    [class.is-invalid]="(registerForm.get('confrimPassword')?.invalid && registerForm.get('confirmPassword')?.
+                    touched) || (registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched)"
                     placeholder="Ketik ulang password"
-                    required
+                    required=""
                   />
                   <button
                     class="btn btn-outline-secondary"
@@ -192,14 +192,14 @@
                   "
                 >
                   <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
-                    Konfirmasi password harus diisi
+                    konfirmasi password harus diisi
                   </div>
                 </div>
                 <div
                   class="invalid-feedback d-block"
                   *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched"
                 >
-                  Password dan Konfirmasi Password tidak cocok
+                  Password dan Konfirmasi tidak cocok
                 </div>
                 <div
                   class="form-text"
@@ -209,7 +209,7 @@
                 </div>
               </div>
 
-              <!-- Syarat & Ketentuan -->
+              <!-- Form Field Conditions CheckBox-->
               <div class="mb-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="terms" />
@@ -221,7 +221,7 @@
                 </div>
               </div>
 
-              <!-- Submit Button -->
+              <!-- Form Submit Button -->
               <div class="d-grid gap-2 mb-3">
                 <button
                   type="submit"
@@ -239,6 +239,7 @@
                 </button>
               </div>
 
+              <!-- Link ke login Page -->
               <div class="text-center">
                 <p class="mb-0 text-muted">
                   Sudah punya akun?
@@ -248,7 +249,7 @@
                 </p>
               </div>
 
-              <!-- Benefits Info -->
+              <!-- Benefits info Cards -->
               <div class="row mt-5 g-4">
                 <div class="col-md-4">
                   <div class="card h-100 text-center border-0 shadow-sm">

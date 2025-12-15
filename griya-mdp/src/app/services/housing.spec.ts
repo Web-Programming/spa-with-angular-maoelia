@@ -1,22 +1,21 @@
+// Service global bisa digunakkan dimana saja
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http'; // Inject untuk http Req
 import { Observable } from 'rxjs';
 
-// Interface untuk response
-//menampung pesan ketika register atau login (ip,emai,nama)
+// interface untuk response
 export interface AuthResponse {
-  success: boolean;
+  succes: boolean;
   message: string;
   data?: {
     id: string;
     name: string;
-    email: string;
+    password: string;
     createdAt?: string;
   };
 }
 
 // Interface untuk register request
-//mengirim data ke server (email,password,confirm pw)
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -25,7 +24,6 @@ export interface RegisterRequest {
 }
 
 // Interface untuk login request
-//kirim data ke backend (email,password)
 export interface LoginRequest {
   email: string;
   password: string;
@@ -72,6 +70,14 @@ export class AuthService {
    */
   saveUserData(userData: any): void {
     localStorage.setItem('user', JSON.stringify(userData));
+    // tambahkan
+    if (userData.token) {
+      localStorage.setItem('token', userData.token);
+    }
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   /**
