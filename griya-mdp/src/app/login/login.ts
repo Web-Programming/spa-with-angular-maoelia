@@ -1,18 +1,8 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// - `ReactiveFormsModule` - Untuk menggunakan Reactive Forms
-// - `FormGroup` - Tipe data untuk mengelola grup form control
-// - `Validators` - Built-in validators Angular (required, email, minLength)
-// - `FormBuilder` - Service untuk membuat form dengan syntax yang lebih ringkas
-import {
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
-import { RouterLink, Router } from '@angular/router'; // tambah router untuk navigasi ke home page setelah berhasil
-import { AuthService } from '../services/housing.spec'; // service untuk API Calss dan localStorage managemnt
+import { Component } from '@angular/core';
+import { FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
+import { RouterLink, Router } from '@angular/router';
+import { AuthService } from '../services/housing.spec';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +18,6 @@ export class Login {
   errorMessage = '';
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
-    // Form initialization
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -46,10 +35,11 @@ export class Login {
       // Kirim data ke backend API melalui AuthService
       this.authService.login(formData).subscribe({
         next: (response) => {
-          console.log('Login succesfull', response);
-          this.successMessage = response.message || 'Login berhasil';
+          console.log('Login successful', response);
+          this.isLoading = false;
+          this.successMessage = response.message || 'Login berhasil!';
 
-          // Simpan user data ke localStroge
+          // Simpan user data ke localStorage
           if (response.data) {
             this.authService.saveUserData(response.data);
           }
@@ -70,9 +60,6 @@ export class Login {
           }, 5000);
         },
       });
-
-      // TODO: Kirim data ke backend API untuk autentikasi
-      // this.authService.login(formData).subscribe(...)
     } else {
       console.log('Form is not valid');
       this.errorMessage = 'Mohon lengkapi semua field dengan benar';

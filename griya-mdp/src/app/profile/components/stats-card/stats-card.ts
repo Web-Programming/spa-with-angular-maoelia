@@ -7,8 +7,8 @@ import { StatsSummary } from '../../profile.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './stats-card.html',
-  styleUrl: './stats-card.css',
+  styleUrls: ['./stats-card.css'],
 })
-export class StatsCard {
+export class StatsCardComponent {
   @Input() stats!: StatsSummary;
 }

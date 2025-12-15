@@ -1,22 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from '../services/housing.spec';
 
-import { Detail } from './detail';
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-describe('Detail', () => {
-  let component: Detail;
-  let fixture: ComponentFixture<Detail>;
+  if (authService.isLoggedIn()) {
+    return true;
+  }
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Detail],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(Detail);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  // Redirect ke login jika belum login
+  return router.createUrlTree(['/login']);
+};

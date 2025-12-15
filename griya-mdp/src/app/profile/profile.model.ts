@@ -45,12 +45,12 @@ export interface FavoriteItem {
 }
 
 export interface HistoryItem {
-  icon: string; // e.g. 'bi-check-circle-fill'
+  icon: string;      // e.g. 'bi-check-circle-fill'
   iconColor: 'success' | 'primary' | 'info' | 'warning' | 'danger';
   title: string;
   description: string;
-  time: string; // e.g. '2 hari yang lalu'
-  badge?: string; // e.g. 'Rp 5.000.000'
+  time: string;      // e.g. '2 hari yang lalu'
+  badge?: string;    // e.g. 'Rp 5.000.000'
   badgeColor?: 'success' | 'primary' | 'info' | 'warning' | 'danger';
 }
 

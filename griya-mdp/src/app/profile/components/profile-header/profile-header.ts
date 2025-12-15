@@ -7,9 +7,9 @@ import { UserProfile } from '../../profile.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './profile-header.html',
-  styleUrl: './profile-header.css',
+  styleUrls: ['./profile-header.css'],
 })
-export class ProfileHeader {
+export class ProfileHeaderComponent {
   @Input() user!: UserProfile;
   @Output() edit = new EventEmitter<void>();
   @Output() settings = new EventEmitter<void>();

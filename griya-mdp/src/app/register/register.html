@@ -14,7 +14,7 @@
         <!-- Register Form Card -->
         <div class="card shadow-lg border-0">
           <div class="card-body p-4 p-md-5">
-            <!-- Success alert -->
+            <!-- Success Alert -->
             <div
               class="alert alert-success alert-dismissible fade show"
               role="alert"
@@ -28,6 +28,7 @@
                 aria-label="Close"
               ></button>
             </div>
+
             <!-- Error Alert -->
             <div
               class="alert alert-danger alert-dismissible fade show"
@@ -42,9 +43,9 @@
                 aria-label="Close"
               ></button>
             </div>
-            <!-- Form akan berada di sini -->
+
             <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
-              <!-- Form Fields Name -->
+              <!-- Name Field -->
               <div class="mb-4">
                 <label for="name" class="form-label fw-semibold">
                   <i class="bi bi-person-fill me-2"></i>Nama Lengkap
@@ -77,7 +78,7 @@
                 </div>
               </div>
 
-              <!-- Form Field Email-->
+              <!-- Email Field -->
               <div class="mb-4">
                 <label for="email" class="form-label fw-semibold">
                   <i class="bi bi-envelope-fill me-2"></i>Email
@@ -112,14 +113,14 @@
                 </div>
               </div>
 
-              <!-- Form Field Password-->
+              <!-- Password Field -->
               <div class="mb-4">
                 <label for="password" class="form-label fw-semibold">
                   <i class="bi bi-lock-fill me-2"></i>Password
                 </label>
                 <div class="input-group">
                   <input
-                    type="password"
+                    [type]="showPassword ? 'text' : 'password'"
                     class="form-control form-control-lg"
                     id="password"
                     formControlName="password"
@@ -138,7 +139,7 @@
                   </button>
                 </div>
                 <div
-                  class="invalid-feedback"
+                  class="invalid-feedback d-block"
                   *ngIf="
                     registerForm.get('password')?.invalid && registerForm.get('password')?.touched
                   "
@@ -160,9 +161,9 @@
                 </div>
               </div>
 
-              <!-- Confrim password Field -->
+              <!-- Confirm Password Field -->
               <div class="mb-4">
-                <label for="confrimPassword" class="form-label fw-semibold">
+                <label for="confirmPassword" class="form-label fw-semibold">
                   <i class="bi bi-lock-fill me-2"></i>Konfirmasi Password
                 </label>
                 <div class="input-group">
@@ -171,10 +172,9 @@
                     class="form-control form-control-lg"
                     id="confirmPassword"
                     formControlName="confirmPassword"
-                    [class.is-invalid]="(registerForm.get('confrimPassword')?.invalid && registerForm.get('confirmPassword')?.
-                    touched) || (registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched)"
+                    [class.is-invalid]="(registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched) || (registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched)"
                     placeholder="Ketik ulang password"
-                    required=""
+                    required
                   />
                   <button
                     class="btn btn-outline-secondary"
@@ -192,14 +192,14 @@
                   "
                 >
                   <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">
-                    konfirmasi password harus diisi
+                    Konfirmasi password harus diisi
                   </div>
                 </div>
                 <div
                   class="invalid-feedback d-block"
                   *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched"
                 >
-                  Password dan Konfirmasi tidak cocok
+                  Password dan Konfirmasi Password tidak cocok
                 </div>
                 <div
                   class="form-text"
@@ -209,7 +209,7 @@
                 </div>
               </div>
 
-              <!-- Form Field Conditions CheckBox-->
+              <!-- Terms & Conditions Checkbox -->
               <div class="mb-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="terms" />
@@ -221,7 +221,7 @@
                 </div>
               </div>
 
-              <!-- Form Submit Button -->
+              <!-- Submit Button -->
               <div class="d-grid gap-2 mb-3">
                 <button
                   type="submit"
@@ -239,70 +239,70 @@
                 </button>
               </div>
 
-              <!-- Link ke login Page -->
+              <!-- Login Link -->
               <div class="text-center">
                 <p class="mb-0 text-muted">
                   Sudah punya akun?
-                  <a routerLink="/login" class="text-primary text-decoration-none fw-semibold">
-                    Login di sini
-                  </a>
+                  <a routerLink="/login" class="text-primary text-decoration-none fw-semibold"
+                    >Login di sini</a
+                  >
                 </p>
               </div>
-
-              <!-- Benefits info Cards -->
-              <div class="row mt-5 g-4">
-                <div class="col-md-4">
-                  <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                      <div
-                        class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
-                        style="width: 60px; height: 60px"
-                      >
-                        <i class="bi bi-shield-check text-white fs-3"></i>
-                      </div>
-                      <h6 class="card-title fw-bold">Aman & Terpercaya</h6>
-                      <p class="card-text text-muted small">
-                        Data Anda dilindungi dengan enkripsi tingkat tinggi
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                      <div
-                        class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
-                        style="width: 60px; height: 60px"
-                      >
-                        <i class="bi bi-bell-fill text-white fs-3"></i>
-                      </div>
-                      <h6 class="card-title fw-bold">Update Terbaru</h6>
-                      <p class="card-text text-muted small">
-                        Dapatkan notifikasi properti baru sesuai kebutuhan
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="card h-100 text-center border-0 shadow-sm">
-                    <div class="card-body">
-                      <div
-                        class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
-                        style="width: 60px; height: 60px"
-                      >
-                        <i class="bi bi-heart-fill text-white fs-3"></i>
-                      </div>
-                      <h6 class="card-title fw-bold">Simpan Favorit</h6>
-                      <p class="card-text text-muted small">
-                        Bookmark properti favorit untuk akses mudah
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </form>
+          </div>
+        </div>
+
+        <!-- Benefits Info -->
+        <div class="row mt-5 g-4">
+          <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+              <div class="card-body">
+                <div
+                  class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
+                  style="width: 60px; height: 60px"
+                >
+                  <i class="bi bi-shield-check text-white fs-3"></i>
+                </div>
+                <h6 class="card-title fw-bold">Aman & Terpercaya</h6>
+                <p class="card-text text-muted small">
+                  Data Anda dilindungi dengan enkripsi tingkat tinggi
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+              <div class="card-body">
+                <div
+                  class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
+                  style="width: 60px; height: 60px"
+                >
+                  <i class="bi bi-bell-fill text-white fs-3"></i>
+                </div>
+                <h6 class="card-title fw-bold">Update Terbaru</h6>
+                <p class="card-text text-muted small">
+                  Dapatkan notifikasi properti baru sesuai kebutuhan
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100 text-center border-0 shadow-sm">
+              <div class="card-body">
+                <div
+                  class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3"
+                  style="width: 60px; height: 60px"
+                >
+                  <i class="bi bi-heart-fill text-white fs-3"></i>
+                </div>
+                <h6 class="card-title fw-bold">Simpan Favorit</h6>
+                <p class="card-text text-muted small">
+                  Bookmark properti favorit untuk akses mudah
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

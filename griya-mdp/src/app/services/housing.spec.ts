@@ -1,16 +1,15 @@
-// Service global bisa digunakkan dimana saja
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // Inject untuk http Req
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// interface untuk response
+// Interface untuk response
 export interface AuthResponse {
-  succes: boolean;
+  success: boolean;
   message: string;
   data?: {
     id: string;
     name: string;
-    password: string;
+    email: string;
     createdAt?: string;
   };
 }
@@ -56,12 +55,20 @@ export class AuthService {
   }
 
   /**
-   * Get user profile by ID
-   * @param userId - ID user
+   * Get user profile (menggunakan JWT token)
    * @returns Observable dengan data user
    */
-  getProfile(userId: string): Observable<AuthResponse> {
-    return this.http.get<AuthResponse>(`${this.apiUrl}/profile/${userId}`);
+  getProfile(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/profile`);
+  }
+
+  /**
+   * Update user profile (menggunakan JWT token)
+   * @param data - Data profile yang akan diupdate
+   * @returns Observable dengan response dari backend
+   */
+  updateProfile(data: any): Observable<AuthResponse> {
+    return this.http.put<AuthResponse>(`${this.apiUrl}/profile`, data);
   }
 
   /**
@@ -70,14 +77,9 @@ export class AuthService {
    */
   saveUserData(userData: any): void {
     localStorage.setItem('user', JSON.stringify(userData));
-    // tambahkan
     if (userData.token) {
       localStorage.setItem('token', userData.token);
     }
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
   }
 
   /**
@@ -90,11 +92,19 @@ export class AuthService {
   }
 
   /**
+   * Get JWT Token
+   * @returns Token string atau null
+   */
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  /**
    * Cek apakah user sudah login
    * @returns boolean
    */
   isLoggedIn(): boolean {
-    return this.getUserData() !== null;
+    return this.getToken() !== null;
   }
 
   /**

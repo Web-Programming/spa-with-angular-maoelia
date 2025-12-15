@@ -1,36 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // ← Untuk search
-import { LokasiperumahanComponent } from '../lokasi-perumahan/lokasi-perumahan';
+import { FormsModule } from '@angular/forms';
+import { LokasiPerumahan } from '../lokasi-perumahan/lokasi-perumahan';
 import { Housing } from '../lokasi-perumahan/housing.model';
-import { HousingService } from '../services/housing'; // ← Import service
+import { HousingService } from '../services/housing';
 import { CommonModule } from '@angular/common';
-import { HOUSING_DATA } from '../data/housing-data';
 
 @Component({
   selector: 'app-home',
-  imports: [LokasiperumahanComponent, CommonModule, RouterLink, FormsModule],
+  imports: [LokasiPerumahan, CommonModule, RouterLink, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  // Data arrays
-  housingList: Housing[] = []; // Data dari backend
-  filteredList: Housing[] = []; // Data setelah filter/search
+  // Array untuk data perumahan
+  housingList: Housing[] = [];
+  filteredList: Housing[] = [];
   selectedFilter: string = 'all';
 
-  // Search
-  searchQuery: string = ''; // Query pencarian
+  // Search functionality
+  searchQuery: string = '';
 
   // Pagination
-  currentPage: number = 1; // Halaman saat ini
-  itemsPerPage: number = 6; // Items per halaman
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
 
   // Loading and error states
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  // Fallback data (jika backend tidak tersedia)
+  // Data fallback jika backend tidak tersedia
   private fallbackData: Housing[] = [
     {
       id: 1,
@@ -44,7 +43,8 @@ export class Home implements OnInit {
       rating: 4.5,
       status: 'Available',
       type: 'rumah',
-      description: 'Hunian modern dengan desain minimalis.',
+      description:
+        'Hunian modern dengan desain minimalis di kawasan Jakarta Selatan yang strategis.',
       postedDays: 2,
     },
     {
@@ -309,7 +309,6 @@ export class Home implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // Pindah ke halaman tertentu
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -318,14 +317,12 @@ export class Home implements OnInit {
     }
   }
 
-  // Halaman berikutnya
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.goToPage(this.currentPage + 1);
     }
   }
 
-  // Halaman sebelumnya
   previousPage() {
     if (this.currentPage > 1) {
       this.goToPage(this.currentPage - 1);

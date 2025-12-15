@@ -1,39 +1,61 @@
 import { Routes } from '@angular/router';
 import { Home as HomeComponent } from './home/home';
-import { Profile as ProfileComponent } from './profile/profile';
-import { Login as LoginComponent } from './login/login';
-import { Contact as ContactComponent } from './contact/contact';
-import { Register as RegisterComponent } from './register/register';
+import { Profile } from './profile/profile';
+import { Login } from './login/login';
+import { Register } from './register/register';
+import { Contact } from './contact/contact';
 import { Detail } from './detail/detail';
+import { PropertyForm } from './property-form/property-form';
+import { ProfileEdit } from './profile-edit/profile-edit';
 import { authGuard } from './guards/auth.guards';
 
 export const routes: Routes = [
+  //mengatuh halaman utama aplikasi
   {
     path: '',
     component: HomeComponent,
-    title: 'Home',
+    title: 'Home Page',
   },
   {
     path: 'profile',
-    component: ProfileComponent,
+    component: Profile,
     canActivate: [authGuard],
+    //title : 'Profile Page'
+  },
+  {
+    path: 'profile/edit',
+    component: ProfileEdit,
+    canActivate: [authGuard],
+    title: 'Edit Profile - Griya MDP',
   },
   {
     path: 'login',
-    component: LoginComponent,
+    component: Login,
   },
   {
     path: 'register',
-    component: RegisterComponent,
+    component: Register,
   },
   {
     path: 'contact',
-    component: ContactComponent,
+    component: Contact,
+  },
+  {
+    path: 'property/add',
+    component: PropertyForm,
+    canActivate: [authGuard],
+    title: 'Tambah Properti - Griya MDP',
+  },
+  {
+    path: 'property/edit/:id',
+    component: PropertyForm,
+    canActivate: [authGuard],
+    title: 'Edit Properti - Griya MDP',
   },
   {
     path: 'property/:id',
     component: Detail,
-    title: 'Detail Property',
+    title: 'Detail Property - Griya MDP',
   },
   {
     path: '**',

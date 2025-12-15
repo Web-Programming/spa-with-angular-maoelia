@@ -9,7 +9,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../services/housing.spec'; // Import servce
+import { AuthService } from '../services/housing.spec';
 
 @Component({
   selector: 'app-register',
@@ -18,16 +18,14 @@ import { AuthService } from '../services/housing.spec'; // Import servce
   styleUrl: './register.css',
 })
 export class Register {
-  registerForm: FormGroup; // `registerForm` bertipe `FormGroup` untuk mengelola seluruh form
+  registerForm: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
   isLoading = false;
   successMessage = '';
   errorMessage = '';
 
-  // `fb: FormBuilder` di-inject melalui constructor untuk membuat form
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    // `fb.group()` - Membuat FormGroup dengan object configuration
     this.registerForm = this.fb.group(
       {
         name: ['', [Validators.required, Validators.minLength(2)]],
@@ -35,11 +33,11 @@ export class Register {
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
-      { Validators: this.passwordMatchValidator }
-    ); // tambah custom validator
+      { validators: this.passwordMatchValidator }
+    );
   }
 
-  // custom validator untuk password match
+  // Custom validator untuk password match
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
@@ -47,11 +45,8 @@ export class Register {
     if (!password || !confirmPassword) {
       return null;
     }
-    return password.value === confirmPassword.value
-      ? null
-      : {
-          mismatch: true,
-        };
+
+    return password.value === confirmPassword.value ? null : { mismatch: true };
   }
 
   submitRegister(): void {
@@ -65,29 +60,27 @@ export class Register {
       // Kirim data ke backend API melalui AuthService
       this.authService.register(formData).subscribe({
         next: (response) => {
-          console.log('Registration succesfull', response);
+          console.log('Registration successful', response);
           this.isLoading = false;
-          this.successMessage = response.message || 'Registrasi berhasil! silahkan login';
+          this.successMessage = response.message || 'Registrasi berhasil! Silakan login';
           this.registerForm.reset();
 
           // Auto hide success message after 5 seconds
           setTimeout(() => {
-            this, (this.successMessage = '');
+            this.successMessage = '';
           }, 5000);
         },
         error: (error) => {
           console.error('Registration failed', error);
           this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Registrasi gagal. Silahkan coba lagi';
+          this.errorMessage = error.error?.message || 'Registrasi gagal. Silakan coba lagi';
 
-          // auto hide error message after 5 seconds
+          // Auto hide error message after 5 seconds
           setTimeout(() => {
             this.errorMessage = '';
           }, 5000);
         },
       });
-      // TODO: Kirim data ke backend API
-      // this.authService.register(formData).subscribe(...)
     } else {
       console.log('Form is not valid');
       this.errorMessage = 'Mohon lengkapi semua field dengan benar';

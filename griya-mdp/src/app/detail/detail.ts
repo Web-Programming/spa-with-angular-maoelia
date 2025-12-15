@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Housing } from '../lokasi-perumahan/housing.model';
 import { HOUSING_DATA } from '../data/housing-data';
+import { HousingService } from '../services/housing';
 
 @Component({
   selector: 'app-detail',
@@ -19,7 +20,11 @@ export class Detail implements OnInit {
   // Data lokal - menggunakan data dari file terpisah yang sama dengan Home Component
   private housingData: Housing[] = HOUSING_DATA;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private housingService: HousingService
+  ) {}
 
   ngOnInit(): void {
     // Ambil ID dari route parameter
@@ -36,17 +41,19 @@ export class Detail implements OnInit {
     // Simulasi delay loading (seperti API call)
     setTimeout(() => {
       // Cari data berdasarkan ID
-      const foundHousing = this.housingData.find((h) => h.id === this.propertyId);
 
-      if (foundHousing) {
-        this.housing = foundHousing;
-        this.isLoading = false;
-        console.log('Detail properti berhasil dimuat:', foundHousing);
-      } else {
-        this.errorMessage = 'Properti tidak ditemukan.';
-        this.isLoading = false;
-        console.error('Properti dengan ID', this.propertyId, 'tidak ditemukan');
-      }
+      this.housingService.getHousingById(this.propertyId).subscribe({
+        next: (housing) => {
+          this.housing = housing;
+          this.isLoading = false;
+          console.log('Detail properti berhasil dimuat dari API:', housing);
+        },
+        error: (error) => {
+          this.errorMessage = 'Properti tidak ditemukan.';
+          this.isLoading = false;
+          console.error('Properti dengan ID', this.propertyId, 'tidak ditemukan');
+        },
+      });
     }, 500); // Delay 500ms untuk UX yang lebih baik
   }
 
