@@ -19,16 +19,16 @@ export class Home implements OnInit {
   filteredList: Housing[] = []; // Data setelah filter/search
   selectedFilter: string = 'all';
 
-  // State management
-  isLoading: boolean = false; // Loading state
-  errorMessage: string = ''; // Error message
-
   // Search
   searchQuery: string = ''; // Query pencarian
 
   // Pagination
   currentPage: number = 1; // Halaman saat ini
   itemsPerPage: number = 6; // Items per halaman
+
+  // Loading and error states
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   // Fallback data (jika backend tidak tersedia)
   private fallbackData: Housing[] = [

@@ -1,12 +1,9 @@
 import { Housing } from '../lokasi-perumahan/housing.model';
 
 /**
- * Data properti/perumahan untuk aplikasi Griya MDP
- *
- * Single source of truth untuk semua data properti.
- * Digunakan oleh:
- * - Home Component (untuk listing)
- * - Detail Component (untuk detail page)
+ * Data lokal untuk housing/properti
+ * File ini berisi data dummy yang dapat digunakan di berbagai component
+ * Nantinya bisa diganti dengan data dari backend API
  */
 export const HOUSING_DATA: Housing[] = [
   {
