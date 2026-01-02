@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserProfile } from '../../profile.model';
-
 @Component({
   selector: 'app-profile-header',
   standalone: true,

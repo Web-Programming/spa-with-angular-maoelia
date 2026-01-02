@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-const jwt = require('jsonwebtoken'); // import jwt
+const jwt = require('jsonwebtoken');
 
 // Register User Baru
 const register = async (req, res) => {
@@ -48,8 +48,6 @@ const register = async (req, res) => {
       });
     }
 
-    //
-
     // Cek apakah email sudah terdaftar
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -69,11 +67,8 @@ const register = async (req, res) => {
     // Simpan ke database
     await newUser.save();
 
-    const token = jwt.sign(
-      { id: newUser._id, email: newUser.email },
-      'kunci_rahasia_griya_mdp', // gunakkan env variabel di production
-      { expiresIn: '1h' } // Token kadaluarsa dalam 1 jam
-    );
+    // Generate Token
+    const token = jwt.sign({ id: newUser._id, email: newUser.email }, 'kunci_rahasia_griya_mdp', { expiresIn: '1h' });
 
     // Response sukses (jangan kirim password)
     res.status(201).json({
@@ -146,11 +141,8 @@ const login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      'kunci_rahasia_griya_mdp', // Gunakkan env variable di production
-      { expiresIn: '1h' } // gunakkan kadaluarsa dalam 1 jam
-    );
+    // Generate Token
+    const token = jwt.sign({ id: user._id, email: user.email }, 'kunci_rahasia_griya_mdp', { expiresIn: '1h' });
 
     // Response sukses (jangan kirim password)
     res.status(200).json({
@@ -160,7 +152,7 @@ const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        token: token, // 3. Kirim token ke frontend
+        token: token,
       },
     });
   } catch (error) {
@@ -173,10 +165,11 @@ const login = async (req, res) => {
   }
 };
 
-// Get User Profile
+// Get User Profile (Protected dengan JWT)
 const getProfile = async (req, res) => {
   try {
-    const userId = req.params.id;
+    // Ambil userId dari JWT token (req.user diset oleh verifyToken middleware)
+    const userId = req.user.id;
 
     const user = await User.findById(userId).select('-password');
     if (!user) {
@@ -200,8 +193,99 @@ const getProfile = async (req, res) => {
   }
 };
 
+// Update User Profile (Protected dengan JWT)
+const updateProfile = async (req, res) => {
+  try {
+    // Ambil userId dari JWT token (req.user diset oleh verifyToken middleware)
+    const userId = req.user.id;
+    const { name, email, phone, location, bio, job, birthdate, status } = req.body;
+
+    // Cari user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User tidak ditemukan',
+      });
+    }
+
+    // Validasi email jika diubah
+    if (email && email !== user.email) {
+      const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Format email tidak valid',
+        });
+      }
+
+      // Cek apakah email sudah digunakan user lain
+      const existingUser = await User.findOne({
+        email: email.toLowerCase(),
+        _id: { $ne: userId },
+      });
+      if (existingUser) {
+        return res.status(409).json({
+          success: false,
+          message: 'Email sudah digunakan oleh user lain',
+        });
+      }
+    }
+
+    // Update data user
+    if (name) user.name = name.trim();
+    if (email) user.email = email.toLowerCase().trim();
+    if (phone !== undefined) user.phone = phone;
+    if (location !== undefined) user.location = location;
+    if (bio !== undefined) user.bio = bio;
+    if (job !== undefined) user.job = job;
+    if (birthdate !== undefined) user.birthdate = birthdate;
+    if (status !== undefined) user.status = status;
+
+    user.updatedAt = Date.now();
+
+    // Simpan perubahan
+    await user.save();
+
+    // Response sukses (tanpa password)
+    res.status(200).json({
+      success: true,
+      message: 'Profil berhasil diupdate',
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        location: user.location,
+        bio: user.bio,
+        job: user.job,
+        birthdate: user.birthdate,
+        status: user.status,
+        updatedAt: user.updatedAt,
+      },
+    });
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({
+        success: false,
+        message: messages.join(', '),
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan pada server',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   getProfile,
+  updateProfile,
 };

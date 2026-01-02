@@ -18,7 +18,6 @@ import {
 } from './profile.model';
 import { HousingService } from '../services/housing';
 import { AuthService } from '../services/housing.spec';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-profile',

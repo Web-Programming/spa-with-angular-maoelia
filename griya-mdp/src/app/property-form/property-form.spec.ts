@@ -8,8 +8,9 @@ describe('PropertyForm', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PropertyForm],
-    }).compileComponents();
+      imports: [PropertyForm]
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(PropertyForm);
     component = fixture.componentInstance;
